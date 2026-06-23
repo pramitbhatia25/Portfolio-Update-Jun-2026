@@ -5,11 +5,14 @@ import TargetCursor from './components/TargetCursor.jsx';
 import './styles.css';
 
 const ballpitPalette = [0x5a35ff, 0x2f2368, 0xf6f4f0, 0xb8b8bb, 0x191722, 0xe9a8ff];
+const ballpitDesktopGravity = 0.003;
+const ballpitMobileGravity = 0.1;
+const mobileViewportQuery = '(max-width: 680px)';
 
 const workNavLinks = [
   {
     label: 'Resume',
-    href: 'https://docs.google.com/document/d/18n8_1PyM5XKpG0uqZ5Q_2Wj0-_i128uNpVEFe1C_3Bw/edit?usp=sharing',
+    href: 'https://drive.google.com/file/d/18ZqPBKB36wVBRi5as0e_7kf9RqXJYH5k/view?usp=sharing',
     icon: 'resume'
   },
   { label: 'Blog', href: 'https://unfundedthoughts.vercel.app/', icon: 'blog' },
@@ -20,7 +23,7 @@ const workNavLinks = [
 
 const workExperience = [
   {
-    company: 'ProSights',
+    company: 'ProSights (YC W24)',
     href: 'https://www.linkedin.com/company/prosightsco/',
     role: 'Founding Software Engineer',
     period: 'Jan 2026 - Present',
@@ -28,29 +31,47 @@ const workExperience = [
     photoLabel: 'ProSights team',
     photoSrc: '/work/prosights-team.png',
     summary:
-      'Building the agent evaluation and observability platform for production AI workflows: 3000+ agent runs, scoring across precision/recall/completeness/citation accuracy, and telemetry over $100K+ in agent spend.',
+      'Built and owned the Agent Evaluation Platform end-to-end, running 3000+ production agent executions across 4 scoring dimensions - precision, recall, completeness, citation accuracy - plus runtime, token, and cost telemetry evaluating 10+ different AI models.',
     details: [
-      'Built trace-level analytics for Claude, Codex, tool calls, sources, reruns, artifacts, and model/config comparisons.',
-      'Unblocked enterprise deals with an external SSO flow for the Excel VSTO add-in and shipped Python/FastAPI services for OCR, ingestion, layout modeling, and exports at million-page scale.'
+      'Became the #2 code contributor by using agentic coding workflows with test-driven and review-driven development, shipping quickly while maintaining coverage through targeted regression tests and iterative validation.',
+      'Built trace-level observability for AI agents, including command/Python/MCP tool analytics, reasoning-event trends, source-page usage, heatmaps, and model/config dashboards for Claude, Codex, and reasoning-effort comparisons.',
+      'Unblocked 2 six-figure enterprise deals within the first month by engineering an external SSO flow for the Excel VSTO add-in (C#) - launched an Edge app-mode tab to capture device-compliance context Excel can\'t expose and relayed tokens via a callback server.',
+      'Shipped production microservices (Python, FastAPI, Redis Streams, PostgreSQL, Docker) for ingestion/OCR/layout modeling/exports, scaling to millions of pages per month.'
     ]
   },
   {
     company: 'Cybriant',
     href: 'https://www.cybriant.com/',
     role: 'Software Engineer',
-    period: 'May 2023 - Dec 2025',
+    period: 'May 2024 - December 2025',
     place: 'Atlanta, GA',
     photoLabel: 'Cybriant team',
     photoSrc: '/work/cybriant-team.png',
     summary:
-      'Shipped security automation products across Google SecOps, GCP, Auth0, React, Flask, and Python pipelines, turning manual SOC and onboarding workflows into multi-tenant software.',
+      'Architected and deployed a multi-tenant SAAS platform for Google Security Operations, leveraging AI Agents for automated provisioning & customer onboarding. Automated complete customer setup and onboarding process, saving 100+ hours/month & $60k/year.',
     details: [
-      'Built a Google Security Operations SaaS platform that automated customer setup, saving 100+ hours/month and roughly $60K/year.',
-      'Led AI security-agent projects and intern teams, including a 1st place finish among 500+ projects at KSU Capstone Showcase.'
+      'Engineered secure infrastructure with GCP Cloud Run, API Gateway, and Auth0 authentication, ensuring controlled multi-tenant access.',
+      'Led cross-functional intern teams to engineer an AI-powered Attack Surface Management system, creating AI Agents for real-time threat detection, and led teams to 1st place among 500+ projects at KSU\'s 2024 Capstone Showcase.',
+      'Spearheaded deployment of generative AI agents using the Google Agent Development Kit (ADK), implementing prompt engineering, multi-agent collaboration, and AI-driven content generation to automate multi-step SOC workflows responsibly and ethically.'
     ]
   },
   {
-    company: 'BullRun AI',
+    company: 'Cybriant',
+    href: 'https://www.cybriant.com/',
+    role: 'Software Engineer Intern',
+    period: 'May 2023 - Apr 2024',
+    place: 'Atlanta, GA',
+    photoLabel: 'Cybriant team',
+    photoSrc: '/work/cybriant-team.png',
+    summary:
+      'Implemented a QSR reporting platform (React + Flask + API integrations), reducing manual reporting time by 10+ hours/QSR/client.',
+    details: [
+      'Designed and orchestrated a Python ETL pipeline on GCP (Cloud Run Jobs -> BigQuery -> Looker Studio) to automate software package ingestion, reducing runtime from 2 hours to 10 minutes, (90% faster), saving 120+ hours/month and $40k/year in SOC operations.',
+      'Created Python log parsers to map sources into Unified Data Model (UDM) for SecOps, reducing detection triage by 10 min/event.'
+    ]
+  },
+  {
+    company: 'BullrunAI',
     href: 'https://tinyurl.com/4erjxf5d',
     role: 'Co-Founder',
     period: 'May 2025 - Present',
@@ -58,10 +79,10 @@ const workExperience = [
     photoLabel: 'BullRun build diary',
     photoSrc: '/work/bullrun-team.png',
     summary:
-      'Co-founded an AI investment analyst that connects to portfolios and watchlists, explains market movement, and sends daily summaries personalized to a user\'s goals.',
+      'Built an AI Investment Analyst Agent that connects to your portfolio and watchlists, analyses market movements and sends you daily summaries, personalized for your portfolio and financial goals.',
     details: [
-      'Won Best Generative AI Hack at Hacklytics 2025 out of 250+ projects and 1200+ students.',
-      'Built the MVP, shaped the product narrative, and grew a waitlist of 1000+ users.'
+      'Won Best Generative AI Hack @ Hacklytics 2025 (Georgia Tech) out of 250+ projects and 1200+ students.',
+      'Developed MVP and grew a 1000+ user waitlist.'
     ]
   },
   {
@@ -73,10 +94,9 @@ const workExperience = [
     photoLabel: 'Research lab notes',
     photoSrc: '/work/georgia-state-graduation.png',
     summary:
-      'Worked on a C++ command-line system for image experiments with ADIOS2, SQLite, and OpenCV under Dr. Lipeng Wan, improving research storage and processing workflows.',
+      'Worked on a C++ command-line system for managing image experiments with ADIOS2, SQLite, and OpenCV developed at Georgia State University as part of the Undergraduate Assistantship Program under the leadership of Dr. Lipeng Wan.',
     details: [
-      'Integrated image-processing, metadata, and storage layers for repeatable experiment management.',
-      'Balanced research code, systems work, and production engineering habits while completing the undergraduate assistantship.'
+      'Integrated ADIOS2 with OpenCV and SQL to improve the efficiency of image processing and storage for research purposes.'
     ]
   }
 ];
@@ -113,20 +133,41 @@ function WorkNavIcon({ type }) {
   if (type === 'github') {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 3a9 9 0 0 0-3 17c.5.1.7-.2.7-.5v-2c-2.8.6-3.4-1.1-3.4-1.1-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 0 1.6 1.1 1.6 1.1.9 1.6 2.4 1.1 3 .9.1-.7.4-1.1.7-1.3-2.2-.3-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7c-.1-.3-.4-1.3.1-2.7 0 0 .9-.3 2.8 1a9.7 9.7 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7a3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.8v2.8c0 .3.2.6.7.5A9 9 0 0 0 12 3z" />
+        <path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.52 2.87 8.36 6.84 9.72.5.09.68-.22.68-.49 0-.24-.01-1.05-.01-1.9-2.78.62-3.37-1.22-3.37-1.22-.45-1.19-1.11-1.51-1.11-1.51-.91-.64.07-.63.07-.63 1.01.07 1.54 1.06 1.54 1.06.89 1.57 2.34 1.12 2.91.86.09-.66.35-1.12.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 6.97c.85 0 1.71.12 2.51.35 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.82 0 .27.18.59.69.49A10.18 10.18 0 0 0 22 12.25C22 6.59 17.52 2 12 2z" />
       </svg>
     );
   }
 
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M5 9h4v10H5zM5 5h4v2H5zM12 9h4v1.6A3.6 3.6 0 0 1 22 13v6h-4v-5c0-1.2-.5-1.8-1.4-1.8S15 12.8 15 14v5h-3z" />
-    </svg>
-  );
+  if (type === 'linkedin') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V8.98h3.42v1.57h.05c.48-.9 1.64-1.85 3.37-1.85 3.61 0 4.28 2.38 4.28 5.47v6.28zM5.32 7.41a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.1 20.45H3.54V8.98H7.1v11.47zM22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.72V1.72C24 .77 23.21 0 22.23 0z" />
+      </svg>
+    );
+  }
+
+  return null;
+}
+
+function useIsMobileViewport() {
+  const [isMobileViewport, setIsMobileViewport] = useState(() => window.matchMedia(mobileViewportQuery).matches);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(mobileViewportQuery);
+    const syncViewport = () => setIsMobileViewport(mediaQuery.matches);
+
+    syncViewport();
+    mediaQuery.addEventListener('change', syncViewport);
+
+    return () => mediaQuery.removeEventListener('change', syncViewport);
+  }, []);
+
+  return isMobileViewport;
 }
 
 function App() {
   const [previewPhoto, setPreviewPhoto] = useState(null);
+  const isMobileViewport = useIsMobileViewport();
 
   useEffect(() => {
     let frameId = 0;
@@ -182,9 +223,10 @@ function App() {
       <section className="hero-section" aria-labelledby="hero-title">
         <div className="ballpit-layer" aria-hidden="true">
           <Ballpit
+            key={isMobileViewport ? 'mobile-ballpit' : 'desktop-ballpit'}
             className="ballpit-canvas"
             count={92}
-            gravity={0.003}
+            gravity={isMobileViewport ? ballpitMobileGravity : ballpitDesktopGravity}
             friction={0.9995}
             wallBounce={0.96}
             followCursor={false}
@@ -240,7 +282,7 @@ function App() {
           </nav>
           <div className="experience-list" id="work-experience">
             {workExperience.map((item, index) => (
-              <article className="experience-row cursor-target" key={item.company}>
+              <article className="experience-row cursor-target" key={`${item.company}-${item.role}-${item.period}`}>
                 <div className="experience-content">
                   <div className="experience-meta">
                     <a href={item.href} target="_blank" rel="noreferrer">
