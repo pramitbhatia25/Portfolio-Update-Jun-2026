@@ -7,6 +7,8 @@ import './styles.css';
 const ballpitPalette = [0x5a35ff, 0x2f2368, 0xf6f4f0, 0xb8b8bb, 0x191722, 0xe9a8ff];
 const ballpitDesktopGravity = 0.003;
 const ballpitMobileGravity = 0.1;
+const ballpitDesktopMaxVelocity = 0.032;
+const ballpitMobileMaxVelocity = 0.08;
 const mobileViewportQuery = '(max-width: 680px)';
 
 const workNavLinks = [
@@ -227,6 +229,7 @@ function App() {
             className="ballpit-canvas"
             count={92}
             gravity={isMobileViewport ? ballpitMobileGravity : ballpitDesktopGravity}
+            enableDeviceGravity={isMobileViewport}
             friction={0.9995}
             wallBounce={0.96}
             followCursor={false}
@@ -237,7 +240,7 @@ function App() {
             maxSize={0.95}
             size0={0.9}
             startSpread={1.6}
-            maxVelocity={0.032}
+            maxVelocity={isMobileViewport ? ballpitMobileMaxVelocity : ballpitDesktopMaxVelocity}
           />
         </div>
 

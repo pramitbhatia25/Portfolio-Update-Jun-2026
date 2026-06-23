@@ -453,7 +453,12 @@ class W {
       const base = 3 * idx;
       I.fromArray(s, base);
       B.fromArray(o, base);
-      B.y -= e.delta * t.gravity * n[idx];
+      if (t.gravityDirection) {
+        B.x += e.delta * t.gravity * t.gravityDirection.x * n[idx];
+        B.y -= e.delta * t.gravity * t.gravityDirection.y * n[idx];
+      } else {
+        B.y -= e.delta * t.gravity * n[idx];
+      }
       B.multiplyScalar(t.friction);
       B.clampLength(0, t.maxVelocity);
       I.add(B);
@@ -506,7 +511,7 @@ class W {
         I.x = Math.sign(I.x) * (t.maxX - radius);
         B.x = -B.x * t.wallBounce;
       }
-      if (t.gravity === 0) {
+      if (t.gravity === 0 || t.gravityDirection) {
         if (Math.abs(I.y) + radius > t.maxY) {
           I.y = Math.sign(I.y) * (t.maxY - radius);
           B.y = -B.y * t.wallBounce;
@@ -572,6 +577,7 @@ const X = {
   maxSize: 1,
   size0: 1,
   gravity: 0.5,
+  gravityDirection: null,
   friction: 0.9975,
   wallBounce: 0.95,
   maxVelocity: 0.15,
@@ -717,6 +723,9 @@ function createBallpit(e, t = {}) {
     setCount(e) {
       initialize({ ...s.config, count: e });
     },
+    setGravityDirection(e) {
+      s.config.gravityDirection = e;
+    },
     togglePause() {
       c = !c;
     },
@@ -727,7 +736,33 @@ function createBallpit(e, t = {}) {
   };
 }
 
-const Ballpit = ({ className = '', followCursor = true, ...props }) => {
+const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+function getDeviceGravityDirection(event) {
+  const x = clamp((event.gamma ?? 0) / 45, -1, 1);
+  const y = clamp((event.beta ?? 0) / 45, -1, 1);
+  const length = Math.hypot(x, y);
+
+  if (length < 0.08) {
+    return { x: 0, y: 1 };
+  }
+
+  return { x: x / Math.max(length, 1), y: y / Math.max(length, 1) };
+}
+
+function getPointerGravityDirection(event) {
+  const x = clamp((event.clientX / Math.max(window.innerWidth, 1) - 0.5) * 2, -1, 1);
+  const y = clamp((event.clientY / Math.max(window.innerHeight, 1) - 0.5) * 2, -1, 1);
+  const length = Math.hypot(x, y);
+
+  if (length < 0.08) {
+    return { x: 0, y: 1 };
+  }
+
+  return { x: x / Math.max(length, 1), y: y / Math.max(length, 1) };
+}
+
+const Ballpit = ({ className = '', followCursor = true, enableDeviceGravity = false, ...props }) => {
   const canvasRef = useRef(null);
   const spheresInstanceRef = useRef(null);
   const [isUnsupported, setIsUnsupported] = useState(false);
@@ -737,7 +772,11 @@ const Ballpit = ({ className = '', followCursor = true, ...props }) => {
     if (!canvas) return;
 
     try {
-      spheresInstanceRef.current = createBallpit(canvas, { followCursor, ...props });
+      spheresInstanceRef.current = createBallpit(canvas, {
+        followCursor,
+        ...(enableDeviceGravity ? { gravityDirection: { x: 0, y: 1 } } : {}),
+        ...props
+      });
       setIsUnsupported(false);
     } catch {
       setIsUnsupported(true);
@@ -750,6 +789,52 @@ const Ballpit = ({ className = '', followCursor = true, ...props }) => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!enableDeviceGravity || typeof window === 'undefined') return undefined;
+
+    let orientationEnabled = false;
+    let hasOrientationSignal = false;
+
+    const updateGravityDirection = event => {
+      if (!orientationEnabled) return;
+      hasOrientationSignal = true;
+      spheresInstanceRef.current?.setGravityDirection(getDeviceGravityDirection(event));
+    };
+
+    const updatePointerGravityDirection = event => {
+      if (hasOrientationSignal) return;
+      spheresInstanceRef.current?.setGravityDirection(getPointerGravityDirection(event));
+    };
+
+    const enableOrientation = async () => {
+      if (orientationEnabled) return;
+      if (!window.DeviceOrientationEvent) return;
+
+      try {
+        if (typeof window.DeviceOrientationEvent.requestPermission === 'function') {
+          const permission = await window.DeviceOrientationEvent.requestPermission();
+          if (permission !== 'granted') return;
+        }
+
+        orientationEnabled = true;
+        window.addEventListener('deviceorientation', updateGravityDirection, { passive: true });
+      } catch {
+        orientationEnabled = false;
+      }
+    };
+
+    window.addEventListener('click', enableOrientation, { passive: true, once: true });
+    window.addEventListener('touchend', enableOrientation, { passive: true, once: true });
+    window.addEventListener('pointermove', updatePointerGravityDirection, { passive: true });
+
+    return () => {
+      window.removeEventListener('click', enableOrientation);
+      window.removeEventListener('touchend', enableOrientation);
+      window.removeEventListener('pointermove', updatePointerGravityDirection);
+      window.removeEventListener('deviceorientation', updateGravityDirection);
+    };
+  }, [enableDeviceGravity]);
 
   if (isUnsupported) {
     return <div className={`${className} ballpit-fallback`} aria-hidden="true" />;
