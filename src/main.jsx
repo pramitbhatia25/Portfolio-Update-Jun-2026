@@ -6,7 +6,7 @@ import './styles.css';
 
 const ballpitPalette = [0x5a35ff, 0x2f2368, 0xf6f4f0, 0xb8b8bb, 0x191722, 0xe9a8ff];
 const ballpitDesktopGravity = 0.003;
-const ballpitMobileGravity = 0.28;
+const ballpitMobileGravity = 0.5;
 const ballpitDesktopMaxVelocity = 0.032;
 const ballpitMobileMaxVelocity = 0.18;
 const mobileViewportQuery = '(max-width: 680px)';
@@ -24,7 +24,7 @@ const workNavLinks = [
     icon: 'resume'
   },
   { label: 'Blog', href: 'https://unfundedthoughts.vercel.app/', icon: 'blog' },
-  { label: 'Work', href: '#work-experience', icon: 'work' },
+  { label: 'Work', href: '#work-title', icon: 'work' },
   { label: 'GitHub', href: 'https://github.com/pramitbhatia25', icon: 'github' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/pramit-bhatia-220680b2/', icon: 'linkedin' }
 ];
@@ -51,31 +51,29 @@ const workExperience = [
     company: 'Cybriant',
     href: 'https://www.cybriant.com/',
     role: 'Software Engineer',
-    period: 'May 2024 - December 2025',
+    period: 'May 2023 - December 2025',
     place: 'Atlanta, GA',
+    positions: [
+      {
+        role: 'Software Engineer',
+        period: 'May 2024 - December 2025',
+        place: 'Atlanta, GA'
+      },
+      {
+        role: 'Software Engineer Intern',
+        period: 'May 2023 - Apr 2024',
+        place: 'Atlanta, GA'
+      }
+    ],
     photoLabel: 'Cybriant team',
     photoSrc: '/work/cybriant-team.png',
     summary:
-      'Architected and deployed a multi-tenant SAAS platform for Google Security Operations, leveraging AI Agents for automated provisioning & customer onboarding. Automated complete customer setup and onboarding process, saving 100+ hours/month & $60k/year.',
+      'Shipped security automation products across Google SecOps, GCP, Auth0, React, Flask, and Python data pipelines.',
     details: [
-      'Engineered secure infrastructure with GCP Cloud Run, API Gateway, and Auth0 authentication, ensuring controlled multi-tenant access.',
+      'Architected and deployed a multi-tenant SaaS platform for Google Security Operations, automating customer provisioning and onboarding to save 100+ hours/month and roughly $60K/year.',
+      'Implemented a QSR reporting platform and Python ETL pipeline on GCP (Cloud Run Jobs -> BigQuery -> Looker Studio), reducing reporting and ingestion workflows from hours to minutes.',
       'Led cross-functional intern teams to engineer an AI-powered Attack Surface Management system, creating AI Agents for real-time threat detection, and led teams to 1st place among 500+ projects at KSU\'s 2024 Capstone Showcase.',
-      'Spearheaded deployment of generative AI agents using the Google Agent Development Kit (ADK), implementing prompt engineering, multi-agent collaboration, and AI-driven content generation to automate multi-step SOC workflows responsibly and ethically.'
-    ]
-  },
-  {
-    company: 'Cybriant',
-    href: 'https://www.cybriant.com/',
-    role: 'Software Engineer Intern',
-    period: 'May 2023 - Apr 2024',
-    place: 'Atlanta, GA',
-    photoLabel: 'Cybriant team',
-    photoSrc: '/work/cybriant-team.png',
-    summary:
-      'Implemented a QSR reporting platform (React + Flask + API integrations), reducing manual reporting time by 10+ hours/QSR/client.',
-    details: [
-      'Designed and orchestrated a Python ETL pipeline on GCP (Cloud Run Jobs -> BigQuery -> Looker Studio) to automate software package ingestion, reducing runtime from 2 hours to 10 minutes, (90% faster), saving 120+ hours/month and $40k/year in SOC operations.',
-      'Created Python log parsers to map sources into Unified Data Model (UDM) for SecOps, reducing detection triage by 10 min/event.'
+      'Spearheaded generative AI agent workflows with Google ADK and built Python log parsers mapping sources into Unified Data Model (UDM), reducing detection triage by 10 min/event.'
     ]
   },
   {
@@ -173,9 +171,94 @@ function useIsMobileViewport() {
   return isMobileViewport;
 }
 
-function App() {
+function AppBackground({ isMobileViewport }) {
+  return (
+    <div className="ballpit-layer" aria-hidden="true">
+      <Ballpit
+        key={isMobileViewport ? 'mobile-ballpit' : 'desktop-ballpit'}
+        className="ballpit-canvas"
+        count={92}
+        gravity={isMobileViewport ? ballpitMobileGravity : ballpitDesktopGravity}
+        enableDeviceGravity={isMobileViewport}
+        friction={0.9995}
+        wallBounce={0.96}
+        followCursor={false}
+        colors={ballpitPalette}
+        ambientIntensity={1}
+        lightIntensity={230}
+        minSize={0.36}
+        maxSize={0.95}
+        size0={0.9}
+        startSpread={1.6}
+        maxVelocity={isMobileViewport ? ballpitMobileMaxVelocity : ballpitDesktopMaxVelocity}
+      />
+    </div>
+  );
+}
+
+function GravityPermissionPrompt({ isMobileViewport }) {
+  const [status, setStatus] = useState('idle');
+  const [showToast, setShowToast] = useState(false);
+
+  useEffect(() => {
+    const handleStatus = (event) => {
+      setStatus(event.detail?.status ?? 'idle');
+    };
+
+    window.addEventListener('ballpit-gravity-status', handleStatus);
+    return () => window.removeEventListener('ballpit-gravity-status', handleStatus);
+  }, []);
+
+  useEffect(() => {
+    if (!['enabled', 'denied', 'unsupported'].includes(status)) return undefined;
+
+    setShowToast(true);
+    const toastTimer = window.setTimeout(() => setShowToast(false), 2800);
+    return () => window.clearTimeout(toastTimer);
+  }, [status]);
+
+  if (!isMobileViewport) return null;
+
+  const statusCopy = {
+    idle: '',
+    asking: 'Allow motion access in the browser popup.',
+    enabled: 'Tilt your phone to move the balls.',
+    denied: 'Motion access was blocked. You can allow it in browser settings.',
+    unsupported: 'Tilt control is not supported in this browser.'
+  };
+
+  const toggleTiltControl = () => {
+    if (status === 'enabled') {
+      setShowToast(false);
+      window.dispatchEvent(new Event('disable-ballpit-gravity'));
+      return;
+    }
+
+    setStatus('asking');
+    window.dispatchEvent(new Event('request-ballpit-gravity'));
+  };
+
+  return (
+    <div className={`gravity-permission gravity-permission-${status}`}>
+      <button
+        className="gravity-permission-button cursor-target"
+        type="button"
+        onClick={toggleTiltControl}
+        disabled={status === 'asking'}
+      >
+        {status === 'enabled' ? 'disable tilt' : 'click me'}
+      </button>
+      {showToast || status === 'asking' ? (
+        <p className="gravity-toast" role="status">
+          {statusCopy[status]}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+function PortfolioPage({ isMobileViewport }) {
   const [previewPhoto, setPreviewPhoto] = useState(null);
-  const isMobileViewport = useIsMobileViewport();
 
   useEffect(() => {
     let frameId = 0;
@@ -220,36 +303,7 @@ function App() {
 
   return (
     <main className="portfolio-shell">
-      <TargetCursor
-        targetSelector=".cursor-target"
-        hoverDuration={0.22}
-        cursorColor="#f6f4f0"
-        cursorColorOnTarget="#e9a8ff"
-        hideDefaultCursor
-      />
-
       <section className="hero-section" aria-labelledby="hero-title">
-        <div className="ballpit-layer" aria-hidden="true">
-          <Ballpit
-            key={isMobileViewport ? 'mobile-ballpit' : 'desktop-ballpit'}
-            className="ballpit-canvas"
-            count={92}
-            gravity={isMobileViewport ? ballpitMobileGravity : ballpitDesktopGravity}
-            enableDeviceGravity={isMobileViewport}
-            friction={0.9995}
-            wallBounce={0.96}
-            followCursor={false}
-            colors={ballpitPalette}
-            ambientIntensity={1}
-            lightIntensity={230}
-            minSize={0.36}
-            maxSize={0.95}
-            size0={0.9}
-            startSpread={1.6}
-            maxVelocity={isMobileViewport ? ballpitMobileMaxVelocity : ballpitDesktopMaxVelocity}
-          />
-        </div>
-
         <div className="hero-nameplate">
           <h1 id="hero-title">
             Pramit
@@ -270,6 +324,7 @@ function App() {
               <p key={credential}>{credential}</p>
             ))}
           </div>
+          <GravityPermissionPrompt isMobileViewport={isMobileViewport} />
         </div>
 
       </section>
@@ -282,8 +337,8 @@ function App() {
                 <a
                   className="cursor-target"
                   href={link.href}
-                  target={link.href.startsWith('#') ? undefined : '_blank'}
-                  rel={link.href.startsWith('#') ? undefined : 'noreferrer'}
+                  target={link.href.startsWith('#') || link.href.startsWith('/') ? undefined : '_blank'}
+                  rel={link.href.startsWith('#') || link.href.startsWith('/') ? undefined : 'noreferrer'}
                   key={link.label}
                 >
                   <WorkNavIcon type={link.icon} />
@@ -302,9 +357,23 @@ function App() {
                     <a href={item.href} target="_blank" rel="noreferrer">
                       {item.company}
                     </a>
-                    <span>{item.role}</span>
-                    <strong>{item.period}</strong>
-                    <em>{item.place}</em>
+                    {item.positions ? (
+                      <div className="experience-positions">
+                        {item.positions.map((position) => (
+                          <div className="experience-position" key={`${position.role}-${position.period}`}>
+                            <span>{position.role}</span>
+                            <strong>{position.period}</strong>
+                            <em>{position.place}</em>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <>
+                        <span>{item.role}</span>
+                        <strong>{item.period}</strong>
+                        <em>{item.place}</em>
+                      </>
+                    )}
                   </div>
 
                   <div className="experience-copy">
@@ -359,6 +428,24 @@ function App() {
       ) : null}
 
     </main>
+  );
+}
+
+function App() {
+  const isMobileViewport = useIsMobileViewport();
+
+  return (
+    <>
+      <TargetCursor
+        targetSelector=".cursor-target"
+        hoverDuration={0.22}
+        cursorColor="#f6f4f0"
+        cursorColorOnTarget="#e9a8ff"
+        hideDefaultCursor
+      />
+      <AppBackground isMobileViewport={isMobileViewport} />
+      <PortfolioPage isMobileViewport={isMobileViewport} />
+    </>
   );
 }
 

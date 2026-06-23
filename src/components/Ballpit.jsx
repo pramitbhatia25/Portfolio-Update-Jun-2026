@@ -793,44 +793,67 @@ const Ballpit = ({ className = '', followCursor = true, enableDeviceGravity = fa
   useEffect(() => {
     if (!enableDeviceGravity || typeof window === 'undefined') return undefined;
 
+    let gravityControlsEnabled = false;
     let orientationEnabled = false;
     let hasOrientationSignal = false;
 
+    const sendGravityStatus = status => {
+      window.dispatchEvent(new CustomEvent('ballpit-gravity-status', { detail: { status } }));
+    };
+
     const updateGravityDirection = event => {
-      if (!orientationEnabled) return;
+      if (!gravityControlsEnabled || !orientationEnabled) return;
       hasOrientationSignal = true;
       spheresInstanceRef.current?.setGravityDirection(getDeviceGravityDirection(event));
     };
 
     const updatePointerGravityDirection = event => {
-      if (hasOrientationSignal) return;
+      if (!gravityControlsEnabled || hasOrientationSignal) return;
       spheresInstanceRef.current?.setGravityDirection(getPointerGravityDirection(event));
     };
 
     const enableOrientation = async () => {
       if (orientationEnabled) return;
-      if (!window.DeviceOrientationEvent) return;
+      if (!window.DeviceOrientationEvent) {
+        sendGravityStatus('unsupported');
+        return;
+      }
 
       try {
         if (typeof window.DeviceOrientationEvent.requestPermission === 'function') {
           const permission = await window.DeviceOrientationEvent.requestPermission();
-          if (permission !== 'granted') return;
+          if (permission !== 'granted') {
+            sendGravityStatus('denied');
+            return;
+          }
         }
 
+        gravityControlsEnabled = true;
         orientationEnabled = true;
+        sendGravityStatus('enabled');
         window.addEventListener('deviceorientation', updateGravityDirection, { passive: true });
       } catch {
         orientationEnabled = false;
+        sendGravityStatus('denied');
       }
     };
 
-    window.addEventListener('click', enableOrientation, { passive: true, once: true });
-    window.addEventListener('touchend', enableOrientation, { passive: true, once: true });
+    const disableOrientation = () => {
+      gravityControlsEnabled = false;
+      orientationEnabled = false;
+      hasOrientationSignal = false;
+      spheresInstanceRef.current?.setGravityDirection({ x: 0, y: 1 });
+      window.removeEventListener('deviceorientation', updateGravityDirection);
+      sendGravityStatus('idle');
+    };
+
+    window.addEventListener('request-ballpit-gravity', enableOrientation);
+    window.addEventListener('disable-ballpit-gravity', disableOrientation);
     window.addEventListener('pointermove', updatePointerGravityDirection, { passive: true });
 
     return () => {
-      window.removeEventListener('click', enableOrientation);
-      window.removeEventListener('touchend', enableOrientation);
+      window.removeEventListener('request-ballpit-gravity', enableOrientation);
+      window.removeEventListener('disable-ballpit-gravity', disableOrientation);
       window.removeEventListener('pointermove', updatePointerGravityDirection);
       window.removeEventListener('deviceorientation', updateGravityDirection);
     };
