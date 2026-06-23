@@ -6,10 +6,16 @@ import './styles.css';
 
 const ballpitPalette = [0x5a35ff, 0x2f2368, 0xf6f4f0, 0xb8b8bb, 0x191722, 0xe9a8ff];
 const ballpitDesktopGravity = 0.003;
-const ballpitMobileGravity = 0.1;
+const ballpitMobileGravity = 0.28;
 const ballpitDesktopMaxVelocity = 0.032;
-const ballpitMobileMaxVelocity = 0.08;
+const ballpitMobileMaxVelocity = 0.18;
 const mobileViewportQuery = '(max-width: 680px)';
+const heroCredentials = [
+  '7X Hackathon Winner',
+  'Hackathon Judge @ 10+ MLH hackathons',
+  'SWE Advisory Board Member @ Kennesaw State University',
+  '2x Founder'
+];
 
 const workNavLinks = [
   {
@@ -259,6 +265,11 @@ function App() {
           >
             Founding Software Engineer @ ProSights (YC W24)
           </a>
+          <div className="hero-credentials" aria-label="Highlights">
+            {heroCredentials.map((credential) => (
+              <p key={credential}>{credential}</p>
+            ))}
+          </div>
         </div>
 
       </section>
