@@ -1,0 +1,36 @@
+.target-cursor-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0 10px rgba(90, 53, 255, 0.32));
+}
+
+.target-cursor-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 34px;
+  height: 34px;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  background: rgba(246, 244, 240, 0.04);
+  transform: translate(-50%, -50%);
+  will-change: width, height, border-color, background-color, transform;
+}
+
+.target-cursor-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  background: #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}
