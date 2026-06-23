@@ -226,10 +226,31 @@ p {
 }
 
 .work-kicker a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.42em;
   color: rgba(246, 244, 240, 0.74);
   text-decoration: underline;
   text-decoration-color: rgba(233, 168, 255, 0.36);
   text-underline-offset: 0.22em;
+}
+
+.work-kicker svg {
+  display: none;
+  width: 1em;
+  height: 1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.work-kicker a[href*="github"] svg,
+.work-kicker a[href*="linkedin"] svg {
+  fill: currentColor;
+  stroke: none;
 }
 
 .work-kicker span {
@@ -551,16 +572,19 @@ p {
 
   .work-glass {
     --work-xpad: 14px;
+    --work-header: 62px;
     --work-radius: 28px;
-    padding: 28px var(--work-xpad) 34px;
+    padding: 0 var(--work-xpad) 34px;
   }
 
   .work-kicker {
-    display: none;
-  }
-
-  .work-glass::after {
-    display: none;
+    display: flex;
+    height: var(--work-header);
+    margin-bottom: 28px;
+    gap: 8px;
+    flex-wrap: nowrap;
+    border-radius: var(--work-radius) var(--work-radius) 0 0;
+    font-size: 0;
   }
 
   .experience-list {
@@ -626,5 +650,32 @@ p {
   .photo-preview-card img {
     max-height: calc(64vh - 18px);
     border-radius: 9px;
+  }
+
+  .work-kicker a {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(246, 244, 240, 0.14);
+    border-radius: 999px;
+    background: rgba(246, 244, 240, 0.055);
+    text-decoration: none;
+  }
+
+  .work-kicker a span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .work-kicker svg {
+    display: block;
+    width: 19px;
+    height: 19px;
   }
 }

@@ -9,12 +9,13 @@ const ballpitPalette = [0x5a35ff, 0x2f2368, 0xf6f4f0, 0xb8b8bb, 0x191722, 0xe9a8
 const workNavLinks = [
   {
     label: 'Resume',
-    href: 'https://docs.google.com/document/d/18n8_1PyM5XKpG0uqZ5Q_2Wj0-_i128uNpVEFe1C_3Bw/edit?usp=sharing'
+    href: 'https://docs.google.com/document/d/18n8_1PyM5XKpG0uqZ5Q_2Wj0-_i128uNpVEFe1C_3Bw/edit?usp=sharing',
+    icon: 'resume'
   },
-  { label: 'Blog', href: 'https://unfundedthoughts.vercel.app/' },
-  { label: 'Work', href: '#work-experience' },
-  { label: 'GitHub', href: 'https://github.com/pramitbhatia25' },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/pramit-bhatia-220680b2/' }
+  { label: 'Blog', href: 'https://unfundedthoughts.vercel.app/', icon: 'blog' },
+  { label: 'Work', href: '#work-experience', icon: 'work' },
+  { label: 'GitHub', href: 'https://github.com/pramitbhatia25', icon: 'github' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/pramit-bhatia-220680b2/', icon: 'linkedin' }
 ];
 
 const workExperience = [
@@ -79,6 +80,50 @@ const workExperience = [
     ]
   }
 ];
+
+function WorkNavIcon({ type }) {
+  if (type === 'resume') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 3h8l4 4v14H6z" />
+        <path d="M14 3v5h5" />
+        <path d="M9 13h6M9 17h6M9 9h2" />
+      </svg>
+    );
+  }
+
+  if (type === 'blog') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 20h4l11-11a2.8 2.8 0 0 0-4-4L4 16z" />
+        <path d="M13 6l5 5" />
+      </svg>
+    );
+  }
+
+  if (type === 'work') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 8h16v11H4z" />
+        <path d="M9 8V5h6v3M4 13h16" />
+      </svg>
+    );
+  }
+
+  if (type === 'github') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3a9 9 0 0 0-3 17c.5.1.7-.2.7-.5v-2c-2.8.6-3.4-1.1-3.4-1.1-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 0 1.6 1.1 1.6 1.1.9 1.6 2.4 1.1 3 .9.1-.7.4-1.1.7-1.3-2.2-.3-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7c-.1-.3-.4-1.3.1-2.7 0 0 .9-.3 2.8 1a9.7 9.7 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7a3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.8v2.8c0 .3.2.6.7.5A9 9 0 0 0 12 3z" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M5 9h4v10H5zM5 5h4v2H5zM12 9h4v1.6A3.6 3.6 0 0 1 22 13v6h-4v-5c0-1.2-.5-1.8-1.4-1.8S15 12.8 15 14v5h-3z" />
+    </svg>
+  );
+}
 
 function App() {
   const [previewPhoto, setPreviewPhoto] = useState(null);
@@ -185,7 +230,8 @@ function App() {
                   rel={link.href.startsWith('#') ? undefined : 'noreferrer'}
                   key={link.label}
                 >
-                  {link.label}
+                  <WorkNavIcon type={link.icon} />
+                  <span>{link.label}</span>
                 </a>
               ) : (
                 <span key={link.label}>{link.label}</span>
