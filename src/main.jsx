@@ -25,8 +25,90 @@ const workNavLinks = [
   },
   { label: 'Blog', href: 'https://unfundedthoughts.vercel.app/', icon: 'blog' },
   { label: 'Work', href: '#work-title', icon: 'work' },
+  { label: 'Hackathons', href: '#hackathons', icon: 'hackathons' },
   { label: 'GitHub', href: 'https://github.com/pramitbhatia25', icon: 'github' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/pramit-bhatia-220680b2/', icon: 'linkedin' }
+];
+
+const hackathonProjects = [
+  {
+    title: 'BullrunAI',
+    href: 'https://tinyurl.com/4erjxf5d',
+    date: 'Feb 22-23, 2025',
+    stack: 'AI Agents, finance, portfolio intelligence',
+    award: 'Winner of Best Generative AI Hack @ Hacklytics 2025, Georgia Tech, out of 250+ projects and 1200+ students.',
+    details: [
+      'Built an AI investment analyst that connects to portfolios and watchlists, analyzes market movements, and sends personalized daily summaries.',
+      'Developed the MVP and grew a 1000+ user waitlist.'
+    ]
+  },
+  {
+    title: 'HealthSync',
+    href: 'https://devfolio.co/projects/datadoctor-056d',
+    date: 'Feb 9-11, 2024',
+    stack: 'Azure, OpenAI, ReactJS, MongoDB, Python, Flask',
+    award: 'Winner of Best Healthcare Hack @ Hacklytics 2024, Georgia Tech, out of 200+ projects and 1000+ students.',
+    details: [
+      'Developed a platform for doctors to create custom chatbots for automated medical data extraction, analysis, and patient follow-up.',
+      'Built multiple front-end views and designed the React/Flask/MongoDB architecture within 48 hours.'
+    ]
+  },
+  {
+    title: 'SignEZ',
+    href: 'https://zinc-iterator-405117.ue.r.appspot.com/',
+    date: 'Apr 21, 2023',
+    stack: 'ReactJS, TensorFlowJS, MongoDB, Docker, GitLab, GCP',
+    award: 'Awarded 3rd Place @ CSC Demo Day, Georgia State University, 2023.',
+    details: [
+      'Engineered a real-time sign-language recognition application with TensorFlowJS using the handpose model.',
+      'Implemented a GitLab CI/CD pipeline with Docker containerization and GCP deployment.'
+    ]
+  },
+  {
+    title: 'KunstenAR',
+    href: 'https://devpost.com/software/tbd-0bxgrv',
+    date: 'Nov 17-19, 2023',
+    stack: 'Xcode, Swift, Flask, Python, GCP, Redis',
+    award: 'Winner of Best Use of Redis Award @ AI-ATL, Georgia Tech, 2023.',
+    details: [
+      'Built an iOS augmented-reality app that transforms hand-drawn sketches into 3D models.',
+      'Connected Swift/ARKit front-end flows to Flask, GCP Vertex AI, and Redis-backed conversational context.'
+    ]
+  },
+  {
+    title: 'Transportation Renovation',
+    href: 'https://github.com/pramitbhatia25/Hack-4-Good/blob/main/Transportation%20Renovation.pdf',
+    date: '2022',
+    stack: 'UI/UX, Data Analysis, Transit Safety, Machine Learning',
+    award: 'Won $2K at Social Action Hack-a-thon 2022.',
+    details: [
+      'Redesigned MARTA\'s See & Say incident-reporting flow to address underreported health and safety incidents across Atlanta transit.',
+      'Proposed a 50% reduction in report fields, nested dropdowns, optional contact capture, a safety banner, and better map-based incident transparency.',
+      'Outlined ML-assisted incident categorization to improve rider UX while preserving the data needed for safety analysis.'
+    ]
+  },
+  {
+    title: 'GameJam',
+    href: 'https://github.com/pramitbhatia25/GameJam',
+    date: '2023',
+    stack: 'Python, Flask, MongoDB, HTML/CSS',
+    award: 'Won 1st Place @ Georgia State University Game Jam among 50 students.',
+    details: [
+      'Built a Flask-backed web game with player pages, leaderboard submission, and MongoDB score storage.',
+      'Shipped a deployable Python web app with templates, static assets, and production server configuration during the game-jam window.'
+    ]
+  },
+  {
+    title: 'Code For Good 2022',
+    href: 'https://github.com/pramitbhatia25/Code-For-Good-2022',
+    date: 'Jun 25, 2022',
+    stack: 'React, Express, MongoDB, Bootstrap, Chart.js',
+    award: 'Competed in JPMorgan Chase Code for Good 2022 and was selected for a JPMorgan Chase internship from the India-wide process.',
+    details: [
+      'Built a full-stack platform with startup onboarding, application and funding flows, plus admin and user dashboards.',
+      'Implemented React routes and Express/MongoDB APIs for application intake, approval-status updates, login, and funding requests.'
+    ]
+  }
 ];
 
 const workExperience = [
@@ -39,12 +121,10 @@ const workExperience = [
     photoLabel: 'ProSights team',
     photoSrc: '/work/prosights-team.png',
     summary:
-      'Built and owned the Agent Evaluation Platform end-to-end, running 3000+ production agent executions across 4 scoring dimensions - precision, recall, completeness, citation accuracy - plus runtime, token, and cost telemetry evaluating 10+ different AI models.',
+      'Built and owned the Agent Evaluation Platform end-to-end, running 3000+ production agent executions across precision, recall, completeness, citation accuracy, runtime, token, and cost telemetry.',
     details: [
-      'Became the #2 code contributor by using agentic coding workflows with test-driven and review-driven development, shipping quickly while maintaining coverage through targeted regression tests and iterative validation.',
       'Built trace-level observability for AI agents, including command/Python/MCP tool analytics, reasoning-event trends, source-page usage, heatmaps, and model/config dashboards for Claude, Codex, and reasoning-effort comparisons.',
-      'Unblocked 2 six-figure enterprise deals within the first month by engineering an external SSO flow for the Excel VSTO add-in (C#) - launched an Edge app-mode tab to capture device-compliance context Excel can\'t expose and relayed tokens via a callback server.',
-      'Shipped production microservices (Python, FastAPI, Redis Streams, PostgreSQL, Docker) for ingestion/OCR/layout modeling/exports, scaling to millions of pages per month.'
+      'Shipped Python/FastAPI/Redis/PostgreSQL microservices for ingestion, OCR, layout modeling, exports, and external Excel VSTO SSO that unblocked 2 six-figure enterprise deals.'
     ]
   },
   {
@@ -71,9 +151,7 @@ const workExperience = [
       'Shipped security automation products across Google SecOps, GCP, Auth0, React, Flask, and Python data pipelines.',
     details: [
       'Architected and deployed a multi-tenant SaaS platform for Google Security Operations, automating customer provisioning and onboarding to save 100+ hours/month and roughly $60K/year.',
-      'Implemented a QSR reporting platform and Python ETL pipeline on GCP (Cloud Run Jobs -> BigQuery -> Looker Studio), reducing reporting and ingestion workflows from hours to minutes.',
-      'Led cross-functional intern teams to engineer an AI-powered Attack Surface Management system, creating AI Agents for real-time threat detection, and led teams to 1st place among 500+ projects at KSU\'s 2024 Capstone Showcase.',
-      'Spearheaded generative AI agent workflows with Google ADK and built Python log parsers mapping sources into Unified Data Model (UDM), reducing detection triage by 10 min/event.'
+      'Delivered GCP ETL/reporting, Google ADK agents, UDM log parsers, and AI attack-surface work that won 1st place among 500+ projects at KSU\'s 2024 Capstone Showcase.'
     ]
   },
   {
@@ -85,7 +163,7 @@ const workExperience = [
     photoLabel: 'BullRun build diary',
     photoSrc: '/work/bullrun-team.png',
     summary:
-      'Built an AI Investment Analyst Agent that connects to your portfolio and watchlists, analyses market movements and sends you daily summaries, personalized for your portfolio and financial goals.',
+      'Co-founded BullrunAI, an AI investment analyst for portfolios, watchlists, daily market summaries, and financial-goal context.',
     details: [
       'Won Best Generative AI Hack @ Hacklytics 2025 (Georgia Tech) out of 250+ projects and 1200+ students.',
       'Developed MVP and grew a 1000+ user waitlist.'
@@ -100,9 +178,9 @@ const workExperience = [
     photoLabel: 'Research lab notes',
     photoSrc: '/work/georgia-state-graduation.png',
     summary:
-      'Worked on a C++ command-line system for managing image experiments with ADIOS2, SQLite, and OpenCV developed at Georgia State University as part of the Undergraduate Assistantship Program under the leadership of Dr. Lipeng Wan.',
+      'Built C++ command-line tooling for managing image experiments with ADIOS2, SQLite, and OpenCV at Georgia State University.',
     details: [
-      'Integrated ADIOS2 with OpenCV and SQL to improve the efficiency of image processing and storage for research purposes.'
+      'Integrated image processing and storage workflows for undergraduate research with Dr. Lipeng Wan.'
     ]
   }
 ];
@@ -132,6 +210,16 @@ function WorkNavIcon({ type }) {
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M4 8h16v11H4z" />
         <path d="M9 8V5h6v3M4 13h16" />
+      </svg>
+    );
+  }
+
+  if (type === 'hackathons') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M8 4h8v3a4 4 0 0 1-8 0z" />
+        <path d="M6 5H3v2a4 4 0 0 0 4 4M18 5h3v2a4 4 0 0 1-4 4" />
+        <path d="M12 11v4M9 20h6M10 15h4v5h-4z" />
       </svg>
     );
   }
@@ -331,7 +419,7 @@ function PortfolioPage({ isMobileViewport }) {
 
       <section className="work-section" aria-labelledby="work-title">
         <div className="work-glass">
-          <nav className="work-kicker" id="work-title" aria-label="Profile links">
+          <nav className="work-kicker" aria-label="Profile links">
             {workNavLinks.map((link) =>
               link.href ? (
                 <a
@@ -349,6 +437,9 @@ function PortfolioPage({ isMobileViewport }) {
               )
             )}
           </nav>
+          <header className="work-heading">
+            <h2 id="work-title">Work</h2>
+          </header>
           <div className="experience-list" id="work-experience">
             {workExperience.map((item, index) => (
               <article className="experience-row cursor-target" key={`${item.company}-${item.role}-${item.period}`}>
@@ -377,10 +468,11 @@ function PortfolioPage({ isMobileViewport }) {
                   </div>
 
                   <div className="experience-copy">
-                    <p>{item.summary}</p>
-                    {item.details.map((detail) => (
-                      <p key={detail}>{detail}</p>
-                    ))}
+                    <ul>
+                      {[item.summary, ...item.details].slice(0, 3).map((detail) => (
+                        <li key={detail}>{detail}</li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
 
@@ -407,6 +499,33 @@ function PortfolioPage({ isMobileViewport }) {
               </article>
             ))}
           </div>
+
+          <section className="hackathons-panel" id="hackathons" aria-labelledby="hackathons-title">
+            <header className="hackathons-heading">
+              <h2 id="hackathons-title">Hackathons</h2>
+            </header>
+            <div className="hackathons-list">
+              {hackathonProjects.map((project) => (
+                <article className="hackathon-row cursor-target" key={project.title}>
+                  <div className="hackathon-meta">
+                    <a href={project.href} target="_blank" rel="noreferrer">
+                      {project.title}
+                    </a>
+                    <em>{project.date}</em>
+                    <span>{project.stack}</span>
+                    <strong>{project.award}</strong>
+                  </div>
+                  <div className="hackathon-copy">
+                    <ul>
+                      {project.details.map((detail) => (
+                        <li key={detail}>{detail}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
         </div>
       </section>
 
